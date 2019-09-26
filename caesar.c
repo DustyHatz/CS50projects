@@ -1,26 +1,40 @@
+// This program creates a secret message by way of a "Caesar Cipher".
+// By: Dustin Hatzenbuhler
+
 #include <cs50.h>
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
 #include <ctype.h>
 
+// Accept user input at runtime
 int main(int argc, string argv[])
 {
+    // User must enter exactly one command-line argument
     if (argc == 2)
-    {        
+    {
+        // Convert input to int "key" (atoi will return "0" if char or string is entered)        
         int key = atoi(argv[1]);
-        printf("key: %d\n", key);
         
+        // Value of key must be greater than 0
         if (key > 0) {
+            
+            // Prompt user to enter the original message
             string plainText = get_string("plaintext: ");
+            
+            // Store the length of the message
             int plainLength = strlen(plainText);
-            printf("plainText %s\n", plainText);
-            printf("plainLength %d\n", plainLength);
+            
+            // Print ciphertext
             printf("ciphertext: ");
+            
+            // Iterate through the length of the message
             for (int j = 0; j < plainLength; j++)
             {
+                // If any characters are lowercase
                 if (islower(plainText[j]))
                 {
+                    // Check if characters are upper or lower case and convert
                     int cipherText = ((((plainText[j] + key) - 'a') % 26) + 'a');
                     printf("%c", cipherText);
                 } else if(isupper(plainText[j])) {
@@ -30,12 +44,14 @@ int main(int argc, string argv[])
                     printf("%c", plainText[j]);
                 }
             }
+            
+            //Successful program
             printf("\n");
             return 0;
         }
-        printf("Usage: ./caesar key\n");
-        return 1;   
     }
+    
+    // Unsuccessful program
     printf("Usage: ./caesar key\n");
     return 1;
 }
