@@ -11,7 +11,7 @@ int main(int argc, string argv[])
         int key = atoi(argv[1]);
         printf("key: %d\n", key);
         
-        if (isdigit(key) == false) {
+        if (key > 0) {
             string plainText = get_string("plaintext: ");
             int plainLength = strlen(plainText);
             printf("plainText %s\n", plainText);
@@ -39,5 +39,3 @@ int main(int argc, string argv[])
     printf("Usage: ./caesar key\n");
     return 1;
 }
-
-
