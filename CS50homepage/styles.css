@@ -1,0 +1,60 @@
+nav ul
+{
+    text-align: center;
+    margin: 0;
+    padding: 20px;
+    overflow: hidden;
+    background-color: slategrey;
+    display: table;
+    width: 100%;
+}
+
+nav li
+{
+    display: table-cell;
+}
+
+li a
+{
+    color: white;
+}
+
+li a:hover
+{
+    background-color: white;
+    display: contents;
+    color: brown;
+    text-align: center;
+    padding: 30px 30px;
+    text-decoration: none;
+}
+
+main, h1, h2
+{
+    font-family: "American Typewriter", serif;
+    text-align: center;
+    color: brown;
+}
+
+img
+{
+    border: 4px solid brown;
+    border-radius: 4px;
+    padding: 5px;
+    width: 40%;
+}
+
+#about
+{
+    color: slategrey;
+}
+
+#video_content
+{
+    font-family: "American Typewriter", serif;
+}
+
+.contact
+{
+    text-align: center;
+}
