@@ -1,0 +1,80 @@
+{% extends "layout.html" %}
+
+{% block main %}
+
+    <!-- http://getbootstrap.com/docs/4.1/content/typography/ -->
+    <h1 class="mb-3">New Customer Information</h1>
+
+    <!-- http://getbootstrap.com/docs/4.1/components/forms/ -->
+    <div class="container">
+        <form name="dog" action="/form" method="post" onsubmit="return(validate());">
+
+            <!-- TODO -->
+            <div class="form-group">
+                <label for="name-owner">Owner Name:</label>
+                <input type="text" name="name_owner" class="form-control" id="name-owner" placeholder="First Name">
+            </div>
+            <div class="form-group">
+                <label for="name-dog">Dog Name:</label>
+                <input type="text" name="name_dog" class="form-control" id="name-dog" placeholder="Name">
+            </div>
+            <div class="form-group">
+                <label for="age-dog">Dog Age:</label>
+                <input type="number" name="age_dog" class="form-control" id="age-dog">
+            </div>
+            <label>Gender:</label>
+            <div class="custom-control custom-radio">
+                <input type="radio" id="gender-male" name="gender" value="Male" class="custom-control-input">
+                <label class="custom-control-label" for="gender-male">Male</label>
+            </div>
+            <div class="custom-control custom-radio">
+                <input type="radio" id="gender-female" name="gender" value="Female" class="custom-control-input" required>
+                <label class="custom-control-label" for="gender-female" >Female</label>
+            </div><br>
+            <label>Breed:</label>
+            <div>
+                <select class="custom-select" name="breed" value="Breed">
+                    <option disabled selected value="">Breed</option>
+                    <option value="Cavalier King Charles Spaniel">Cavalier King Charles Spaniel</option>
+                    <option value ="German Shepherd">German Shepherd</option>
+                    <option value="Labrador Retriever">Labrador Retriever</option>
+                    <option value="Rhodesian Ridgeback">Rhodesian Ridgeback</option>
+                </select>
+            </div><br>
+
+            <!-- http://getbootstrap.com/docs/4.1/components/buttons/ -->
+            <button class="btn btn-primary" type="submit">Submit</button>
+
+        </form>
+    </div>
+    <script>
+
+        // validation fails if any inputs are blank
+        function validate() {
+
+            if(document.dog.name_owner.value == "" ) {
+                alert("Please provide your name!");
+                document.dog.name_owner.focus();
+                return false;
+            }
+            if(document.dog.name_dog.value == "" ) {
+                alert("Please provide your dog's name!");
+                document.dog.name_dog.focus();
+                return false;
+            }
+            if(document.dog.age_dog.value == "" || document.dog.age_dog.value < 1 ) {
+                alert("Please provide your dog's age!");
+                document.dog.age_dog.focus();
+                return false;
+            }
+            if(document.dog.breed.value == "" || document.dog.breed.value == "breed") {
+                alert("Please select a dog breed!");
+                document.dog.breed.focus();
+                return false;
+            }
+            return true;
+        }
+
+    </script>
+
+{% endblock %}
