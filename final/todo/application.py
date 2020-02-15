@@ -170,11 +170,24 @@ def add():
         return render_template("index.html")
 
 
-@app.route("/delete")
+@app.route("/delete", methods=["POST"])
 def delete():
-    db.execute("DELETE FROM tasks WHERE id=:id", id=session["user_id"])
+    if request.method == "POST":
 
-    return redirect("/")
+        #task_to_move = db.execute("SELECT task FROM tasks WHERE todo=?", (request.form["task_to_delete"],))
+
+        #due_date = db.execute("SELECT date FROM tasks WHERE todo=?", (request.form["task_to_delete"],))
+
+        now = datetime.now().strftime("%m-%d-%Y %H:%M:%S")
+
+        db.execute("INSERT INTO completed (task, date_due) VALUES((SELECT task FROM tasks WHERE todo=?), (SELECT date FROM tasks WHERE todo=?))", (request.form["task_to_delete"]), (request.form["task_to_delete"]))
+
+        #db.execute("INSERT INTO completed (id, task, date_due, date_completed) VALUES(:id, :task, :date_due, :date_completed)",
+                   #id=session["user_id"], task=task_to_move[0], date_due=due_date[0], date_completed=now)
+
+        db.execute("DELETE FROM tasks WHERE todo=?", (request.form["task_to_delete"],))
+
+        return redirect("/")
 
 if __name__ == '__main__':
     app.run(debug=True)
