@@ -1,0 +1,36 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    completed
+{% endblock %}
+
+{% block main %}
+
+    <h2>Completed Items</h2>
+
+
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>To Do Item</th>
+                <th>Date Due</th>
+                <th>Date/Time Completed</th>
+                <th>Delete</th>
+            </tr>
+        </thead>
+            {% for item in completes %}
+                <tr>
+                    <td>{{ item.task }}</td>
+                    <td>{{ item.date_due }}</td>
+                    <td>{{ item.date_complete }}</td>
+                    <td>
+                        <form action="/delete_completed" method="post">
+                            <input type=hidden value="{{ item.task_id }}" name="id_to_delete">
+                            <button type="submit">Delete</button>
+                        </form>
+                    </td>
+                </tr>
+            {% endfor %}
+    </table>
+
+{% endblock %}
