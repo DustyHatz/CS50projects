@@ -155,11 +155,15 @@ def change_password():
 def add():
 
     if request.method == "POST":
+
+        if not request.form.get("task"):
+            return apology("Must enter a task!", 400)
+
+        elif not request.form.get("date"):
+            return apology("Must enter a due date!", 400)
+
         new_task = request.form.get("task")
         date_due = request.form.get("date")
-
-        if new_task == "":
-            return apology("Add a valid task and due date!", 400)
 
         # Add task to tasks table
         db.execute("INSERT INTO tasks (id, task, date) VALUES(:id, :task, :date)",
@@ -171,23 +175,40 @@ def add():
 
 
 @app.route("/delete", methods=["POST"])
+@login_required
 def delete():
     if request.method == "POST":
 
-        #task_to_move = db.execute("SELECT task FROM tasks WHERE todo=?", (request.form["task_to_delete"],))
+        db.execute("INSERT INTO completed (task, date_due) VALUES((SELECT task FROM tasks WHERE todo=?), (SELECT date FROM tasks WHERE todo=?))",
+                   (request.form["task_to_delete"]), (request.form["task_to_delete"]))
 
-        #due_date = db.execute("SELECT date FROM tasks WHERE todo=?", (request.form["task_to_delete"],))
 
-        now = datetime.now().strftime("%m-%d-%Y %H:%M:%S")
-
-        db.execute("INSERT INTO completed (task, date_due) VALUES((SELECT task FROM tasks WHERE todo=?), (SELECT date FROM tasks WHERE todo=?))", (request.form["task_to_delete"]), (request.form["task_to_delete"]))
-
-        #db.execute("INSERT INTO completed (id, task, date_due, date_completed) VALUES(:id, :task, :date_due, :date_completed)",
-                   #id=session["user_id"], task=task_to_move[0], date_due=due_date[0], date_completed=now)
+        db.execute("UPDATE completed SET id=:id", id=session["user_id"])
 
         db.execute("DELETE FROM tasks WHERE todo=?", (request.form["task_to_delete"],))
 
         return redirect("/")
+
+
+@app.route("/delete_completed", methods=["POST"])
+@login_required
+def delete_completed():
+
+    if request.method == "POST":
+
+        db.execute("DELETE FROM completed WHERE task_id=?", (request.form["id_to_delete"]))
+
+        return redirect("/completed")
+
+
+@app.route("/completed")
+@login_required
+def completed():
+
+        completed_tasks = db.execute("SELECT * FROM completed WHERE id=:id", id=session["user_id"])
+
+        return render_template("completed.html", completes=completed_tasks)
+
 
 if __name__ == '__main__':
     app.run(debug=True)
