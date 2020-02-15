@@ -8,21 +8,21 @@
 
     <form action="/add" method="post">
         <div class="form-group">
-            <input autocomplete="off" autofocus class="form-control" name="task" placeholder="Enter Task" type="text">
+            <input autocomplete="off" autofocus class="form-control" id="validationDefault01" name="task" placeholder="Enter Task" type="text">
         </div>
         <div class="form-group">
-            <input autocomplete="off" autofocus class="form-control" name="date"  type="date">
+            <input autocomplete="off" autofocus class="form-control" id="validationDefault02" name="date"  type="date">
         </div>
         <button class="btn btn-primary" type="submit">Add Task</button>
     </form>
-
+    <br>
 
     <table class="table table-striped">
         <thead>
             <tr>
                 <th>To Do Item</th>
                 <th>Date Due</th>
-                <th>Complete</th>
+                <th>Complete?</th>
             </tr>
         </thead>
             {% for task in butts %}
@@ -32,7 +32,7 @@
                     <td>
                         <form action="/delete" method="post">
                             <input type=hidden value="{{ task.todo }}" name="task_to_delete">
-                            <button type="submit">Delete</button>
+                            <button type="submit" class="btn btn-outline-success">Completed</button>
                         </form>
                     </td>
                 </tr>
