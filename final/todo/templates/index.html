@@ -29,7 +29,12 @@
                 <tr>
                     <td>{{ task.task }}</td>
                     <td>{{ task.date }}</td>
-                    <td onclick=delete()></td>
+                    <td>
+                        <form action="/delete" method="post">
+                            <input type=hidden value="{{ task.todo }}" name="task_to_delete">
+                            <button type="submit">Delete</button>
+                        </form>
+                    </td>
                 </tr>
             {% endfor %}
     </table>
