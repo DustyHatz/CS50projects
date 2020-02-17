@@ -5,31 +5,35 @@
 {% endblock %}
 
 {% block main %}
-    <form action="/register" method="post">
-        <div class="form-group">
-            <input autocomplete="off" autofocus class="form-control" name="username" placeholder="Username" type="text">
-        </div>
-        <div class="form-group">
-            <input class="form-control" name="password" placeholder="Password" type="password">
-        </div>
-        <div class="form-group">
-            <input class="form-control" name="confirmation" placeholder="Confirm Password" type="password">
-        </div>
-        <button class="btn btn-primary" type="submit">Register</button>
-    </form>
+    <h1 class="display-4">Register!</h1>
+    <br>
+    <form action="/register" method="post" class="needs-validation" novalidate
+    oninput='confirmation.setCustomValidity(confirmation.value != password.value ? "Passwords do not match." : "")'>
 
-    <script>
-    function check_username() {
-        var username = document.getElementById("user_input").value;
-        var label = document.getElementById("username_status");
-        $.get("/check?username=" + username, function (data) {
-            if (data == true) {
-                label.innerHTML = "Username available";
-            } else {
-                label.innerHTML = "Username taken";
-                event.preventDefault();
-            }
-        })
-    }
-    </script>
+        <div class="form-group">
+            <input autocomplete="off" autofocus class="form-control" name="name" placeholder="First Name" type="text" required>
+            <div class="invalid-feedback">
+                Please provide a first name
+            </div>
+        </div>
+        <div class="form-group">
+            <input autocomplete="off" autofocus class="form-control" name="username" placeholder="Create Username" type="text" required>
+            <div class="invalid-feedback">
+                Please provide a username
+            </div>
+        </div>
+        <div class="form-group">
+            <input class="form-control" name=password placeholder="Create Password" type="password" required>
+            <div class="invalid-feedback">
+                Must create a password
+            </div>
+        </div>
+        <div class="form-group">
+            <input class="form-control" name=confirmation placeholder="Confirm Password" type="password" required>
+            <div class="invalid-feedback">
+                Passwords do not match
+            </div>
+        </div>
+        <button class="btn btn-success" type="submit">Register</button>
+    </form>
 {% endblock %}
