@@ -1,18 +1,17 @@
 {% extends "layout.html" %}
 
 {% block title %}
-    completed
+    Completed
 {% endblock %}
 
 {% block main %}
 
-    <h2>Completed Items</h2>
-
-
+    <h1 class="display-4">Completed Items ✔</h1>
+    <br>
     <table class="table table-striped">
         <thead>
             <tr>
-                <th>To Do Item</th>
+                <th>Task</th>
                 <th>Date Due</th>
                 <th>Date/Time Completed</th>
                 <th>Delete</th>
@@ -26,7 +25,7 @@
                     <td>
                         <form action="/delete_completed" method="post">
                             <input type=hidden value="{{ item.task_id }}" name="id_to_delete">
-                            <button type="submit">Delete</button>
+                            <button type="submit" class="btn btn-danger">X</button>
                         </form>
                     </td>
                 </tr>
