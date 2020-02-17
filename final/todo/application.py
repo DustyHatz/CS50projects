@@ -40,9 +40,10 @@ db = SQL("sqlite:///todo.db")
 @login_required
 def index():
 
-    user_tasks = db.execute("SELECT * FROM tasks WHERE id=:id", id=session["user_id"])
+    usernames = db.execute("SELECT name FROM users WHERE id=:id", id=session["user_id"])
+    user_tasks = db.execute("SELECT * FROM tasks WHERE id=:id ORDER BY date", id=session["user_id"])
 
-    return render_template("index.html", butts=user_tasks)
+    return render_template("index.html", butts=user_tasks, users=usernames)
 
 
 @app.route("/login", methods=["GET", "POST"])
@@ -57,19 +58,20 @@ def login():
 
         # Check that a username was submitted
         if not request.form.get("username"):
-            return apology("must provide username", 400)
+            flash("Please provide a username")
 
         # Check that password was submitted
         elif not request.form.get("password"):
-            return apology("must provide password", 400)
+            flash("Please provide a password")
 
         # Select username from database
         rows = db.execute("SELECT * FROM users WHERE username = :username",
-                          username=request.form.get("username"))
+                          username=request.form.get("username").lower())
 
         # Check that username exists and password is correct
         if len(rows) != 1 or not check_password_hash(rows[0]["hash"], request.form.get("password")):
-            return apology("invalid username and/or password", 400)
+            flash("Invalid Username and/or Password")
+            return render_template("login.html")
 
         # Remember which user is logged in
         session["user_id"] = rows[0]["id"]
@@ -100,33 +102,41 @@ def register():
 
         # Ensure a username was submitted
         if not request.form.get("username"):
-            return apology("must provide username", 400)
+            flash("Please provide a username")
 
         # Ensure a password was created
         elif not request.form.get("password"):
-            return apology("must provide password", 400)
+            flash("Please provide a password")
 
         # Ensure both entered passwords match
         elif request.form.get("password") != request.form.get("confirmation"):
-            return apology("passwords do not match", 400)
+            flash("Passwords do not match")
 
-        # Collect data from input form
-        username = request.form.get("username")
+        # Collect data from input form (username is converted to lowercase before storing in database)
+        username = request.form.get("username").lower()
         password = request.form.get("password")
+        name = request.form.get("name")
 
         # Hash the password
         hashed_pass = generate_password_hash(password)
 
-        # Add to database
-        result = db.execute("INSERT INTO users (username, hash) VALUES(:username, :password)",
-                            username=username, password=hashed_pass)
+        # Get all users from database
+        users = db.execute("SELECT * FROM users")
 
-        if not result:
-            return apology("Sorry! Username already taken!", 400)
+        # Check if the username already exists
+        for user in users:
 
-        # Store user id in session and automatically log them in
-        session["user_id"] = result
-        return redirect("/")
+            if user["username"] == username:
+                flash("Username already taken")
+                return render_template("register.html")
+        else:
+            # Add to database
+            result = db.execute("INSERT INTO users (username, hash, name) VALUES(:username, :password, :name)",
+                                username=username, password=hashed_pass, name=name)
+
+            # Store user id in session and automatically log them in
+            session["user_id"] = result
+            return redirect("/")
 
     return render_template("register.html")
 
@@ -140,7 +150,7 @@ def change_password():
         password = request.form.get("password")
 
         if password == "":
-            return apology("Password cannot be blank", 400)
+            flash("Password cannot be blank")
 
         pass_hash = generate_password_hash(password)
 
@@ -157,10 +167,10 @@ def add():
     if request.method == "POST":
 
         if not request.form.get("task"):
-            return apology("Must enter a task!", 400)
+            flash("Please enter a task")
 
         elif not request.form.get("date"):
-            return apology("Must enter a due date!", 400)
+            flash("Please enter a due date")
 
         new_task = request.form.get("task")
         date_due = request.form.get("date")
@@ -205,7 +215,7 @@ def delete_completed():
 @login_required
 def completed():
 
-        completed_tasks = db.execute("SELECT * FROM completed WHERE id=:id", id=session["user_id"])
+        completed_tasks = db.execute("SELECT * FROM completed WHERE id=:id ORDER BY date_complete ASC", id=session["user_id"])
 
         return render_template("completed.html", completes=completed_tasks)
 
