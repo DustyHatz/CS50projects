@@ -5,16 +5,25 @@
 {% endblock %}
 
 {% block main %}
-    <form action="/login" method="post">
+    <h1 class="display-4">Ready <span class="text-success">to do</span> something?</h1>
+        <br>
+    <form action="/login" method="post" class="needs-validation" novalidate>
         <div class="form-group">
-            <input autocomplete="off" autofocus class="form-control" name="username" placeholder="Username" type="text">
+            <input autocomplete="off" autofocus class="form-control" id="validationDefault02" name="username" placeholder="Username" type="text" required>
+            <div class="invalid-feedback">
+                Please enter a username
+            </div>
         </div>
         <div class="form-group">
-            <input class="form-control" name="password" placeholder="Password" type="password">
+            <input class="form-control" name="password" placeholder="Password" type="password" required>
+            <div class="invalid-feedback">
+                Please enter a password
+            </div>
         </div>
-        <button class="btn btn-primary" type="submit">Log In</button>
+        <button class="btn btn-success" type="submit">Log In</button>
     </form>
     <hr>
+    <br>
     <p>Not yet registered?</p>
-    <a href="/register"><button class="btn btn-primary">Register</button></a>
+    <a href="/register"><button class="btn btn-dark">Register</button></a>
 {% endblock %}
