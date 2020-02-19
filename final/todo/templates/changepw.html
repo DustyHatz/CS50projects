@@ -5,11 +5,15 @@
 {% endblock %}
 
 {% block main %}
-    <form action="/change_password" method="post">
+    <h1 class="display-4">Change your password!</h1>
+    <br>
+    <form action="/change_password" method="post" class="needs-validation" novalidate>
         <div class="form-group">
-            <input autocomplete="off" autofocus class="form-control" name="password" placeholder="New password"
-                type="password">
+            <input autocomplete="off" autofocus class="form-control" name="password" placeholder="New password" type="password" required>
+            <div class="invalid-feedback">
+                Please enter new password
+            </div>
         </div>
-        <button class="btn btn-primary" type="submit">Submit Password</button>
+        <button class="btn btn-success" type="submit">Change Password</button>
     </form>
 {% endblock %}
