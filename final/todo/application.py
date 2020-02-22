@@ -40,9 +40,13 @@ db = SQL("sqlite:///todo.db")
 @login_required
 def index():
 
+    # Select user's first name from users database
     usernames = db.execute("SELECT name FROM users WHERE id=:id", id=session["user_id"])
+
+    # Select user tasks and sort them by due date
     user_tasks = db.execute("SELECT * FROM tasks WHERE id=:id ORDER BY date", id=session["user_id"])
 
+    # Pass in the name and tasks to index.html for display
     return render_template("index.html", butts=user_tasks, users=usernames)
 
 
@@ -141,19 +145,24 @@ def register():
     return render_template("register.html")
 
 
+
 @app.route("/change_password", methods=["GET", "POST"])
 @login_required
 def change_password():
     if request.method == "GET":
         return render_template("changepw.html")
     else:
+        # Get new password from form input
         password = request.form.get("password")
 
+        # Ensure a new password was entered
         if password == "":
             flash("Password cannot be blank")
 
+        # Hash the password
         pass_hash = generate_password_hash(password)
 
+        # Update user password in database
         db.execute("UPDATE users SET hash = :pw WHERE id = :id",
                    pw=pass_hash, id=session["user_id"])
 
@@ -166,12 +175,17 @@ def add():
 
     if request.method == "POST":
 
+        # Ensure a task was entered
         if not request.form.get("task"):
             flash("Please enter a task")
+            return render_template("index.html")
 
-        elif not request.form.get("date"):
+        # Ensure a due date was entered
+        if not request.form.get("date"):
             flash("Please enter a due date")
+            return render_template("index.html")
 
+        # Get the task and due date from form input
         new_task = request.form.get("task")
         date_due = request.form.get("date")
 
@@ -189,12 +203,14 @@ def add():
 def delete():
     if request.method == "POST":
 
+        # Copy the selected task and due date from the tasks database and insert them into the completed database
         db.execute("INSERT INTO completed (task, date_due) VALUES((SELECT task FROM tasks WHERE todo=?), (SELECT date FROM tasks WHERE todo=?))",
                    (request.form["task_to_delete"]), (request.form["task_to_delete"]))
 
-
+        # Update the user id in the completed database
         db.execute("UPDATE completed SET id=:id", id=session["user_id"])
 
+        # Delete the task entirely from the tasks database
         db.execute("DELETE FROM tasks WHERE todo=?", (request.form["task_to_delete"],))
 
         return redirect("/")
@@ -206,6 +222,7 @@ def delete_completed():
 
     if request.method == "POST":
 
+        # Delete the task entry entirely from the completed database
         db.execute("DELETE FROM completed WHERE task_id=?", (request.form["id_to_delete"]))
 
         return redirect("/completed")
@@ -215,6 +232,7 @@ def delete_completed():
 @login_required
 def completed():
 
+        # Select all completed user specific tasks and sort them in the table by most recently completed
         completed_tasks = db.execute("SELECT * FROM completed WHERE id=:id ORDER BY date_complete ASC", id=session["user_id"])
 
         return render_template("completed.html", completes=completed_tasks)
