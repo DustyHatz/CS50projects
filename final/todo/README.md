@@ -4,7 +4,7 @@
 A simple task management web application built as my final project for Harvard's CS50 Final Project.
 Short video presentation of app features on Youtube:
 
-[![Watch the video](https://img.youtube.com/vi/W0DcuZKyCDQ/hqdefault.jpg)](https://youtu.be/W0DcuZKyCDQ)
+[![Watch the video](https://img.youtube.com/vi/W0DcuZKyCDQ/maxresdefault.jpg)](https://youtu.be/W0DcuZKyCDQ)
 
 ## What Does It Do?
 Allows users to register and login to their own list of tasks to be completed by a specified date.
