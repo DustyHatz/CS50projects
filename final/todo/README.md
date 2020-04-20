@@ -4,7 +4,7 @@
 A simple task management web application built as my final project for Harvard's CS50 Final Project.
 Short video presentation of app features on Youtube: https://youtu.be/W0DcuZKyCDQ
 
-![](CS50projects/finaltodo/todo.gif)
+![](https://github.com/DustyHatz/CS50projects/blob/master/final/todo/todo.gif)
 
 ## What Does It Do?
 Allows users to register and login to their own list of tasks to be completed by a specified date.
