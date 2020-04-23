@@ -203,12 +203,9 @@ def add():
 def delete():
     if request.method == "POST":
 
-        # Copy the selected task and due date from the tasks database and insert them into the completed database
-        db.execute("INSERT INTO completed (task, date_due) VALUES((SELECT task FROM tasks WHERE todo=?), (SELECT date FROM tasks WHERE todo=?))",
-                   (request.form["task_to_delete"]), (request.form["task_to_delete"]))
-
-        # Update the user id in the completed database
-        db.execute("UPDATE completed SET id=:id", id=session["user_id"])
+        # Copy the selected task, due date, and user id from the tasks database and insert them into the completed database
+        db.execute("INSERT INTO completed (task, date_due, id) VALUES((SELECT task FROM tasks WHERE todo=?), (SELECT date FROM tasks WHERE todo=?), (SELECT id FROM tasks WHERE todo=?))",
+                   (request.form["task_to_delete"]), (request.form["task_to_delete"]), (request.form["task_to_delete"],))
 
         # Delete the task entirely from the tasks database
         db.execute("DELETE FROM tasks WHERE todo=?", (request.form["task_to_delete"],))
