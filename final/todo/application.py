@@ -10,7 +10,8 @@ from werkzeug.security import check_password_hash, generate_password_hash
 
 from helpers import *
 
-app = Flask(__name__)
+# Must be named "application" for AWS deployment to work properly
+application = app = Flask(__name__)
 
 # Ensure templates are auto-reloaded
 app.config["TEMPLATES_AUTO_RELOAD"] = True
@@ -32,13 +33,16 @@ app.config["SESSION_TYPE"] = "filesystem"
 Session(app)
 
 # Configure CS50 Library to use SQLite database
-db = SQL("sqlite:///todo.db")
+db = SQL("sqlite:///todo3.db")
 
 
 
 @app.route('/')
 @login_required
 def index():
+
+    # Connect to the database
+    db = SQL("sqlite:///todo3.db")
 
     # Select user's first name from users database
     usernames = db.execute("SELECT name FROM users WHERE id=:id", id=session["user_id"])
@@ -52,7 +56,11 @@ def index():
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
+
     """Log user in"""
+
+    # Connect to the database
+    db = SQL("sqlite:///todo3.db")
 
     # Forget any user_id
     session.clear()
@@ -69,7 +77,7 @@ def login():
             flash("Please provide a password")
 
         # Select username from database
-        rows = db.execute("SELECT * FROM users WHERE username = :username",
+        rows = db.execute("SELECT * FROM users WHERE username = :username", 
                           username=request.form.get("username").lower())
 
         # Check that username exists and password is correct
@@ -90,7 +98,11 @@ def login():
 
 @app.route("/logout")
 def logout():
+
     """Log user out"""
+
+    # Connect to the database
+    db = SQL("sqlite:///todo3.db")
 
     # Forget any user_id
     session.clear()
@@ -101,7 +113,13 @@ def logout():
 
 @app.route("/register", methods=["GET", "POST"])
 def register():
+
     """Register user"""
+
+    # Connect to the database
+    db = SQL("sqlite:///todo3.db")
+    
+    # User reached route via POST (as by submitting a form via POST)
     if request.method == "POST":
 
         # Ensure a username was submitted
@@ -149,8 +167,15 @@ def register():
 @app.route("/change_password", methods=["GET", "POST"])
 @login_required
 def change_password():
+
+    """Change user password"""
+
+    # Connect to the database
+    db = SQL("sqlite:///todo3.db")
+
     if request.method == "GET":
         return render_template("changepw.html")
+
     else:
         # Get new password from form input
         password = request.form.get("password")
@@ -173,6 +198,12 @@ def change_password():
 @login_required
 def add():
 
+    """Add todo item"""
+
+    # Connect to the database
+    db = SQL("sqlite:///todo3.db")
+
+    # User reached route via POST (as by submitting a form via POST)
     if request.method == "POST":
 
         # Ensure a task was entered
@@ -194,6 +225,7 @@ def add():
                     id=session["user_id"], task=new_task, date=date_due)
 
         return redirect("/")
+
     else:
         return render_template("index.html")
 
@@ -201,6 +233,13 @@ def add():
 @app.route("/delete", methods=["POST"])
 @login_required
 def delete():
+
+    """Delete todo item"""
+
+    # Connect to database
+    db = SQL("sqlite:///todo3.db")
+
+    # User reached route via POST (as by submitting a form via POST)
     if request.method == "POST":
 
         # Copy the selected task, due date, and user id from the tasks database and insert them into the completed database
@@ -217,6 +256,12 @@ def delete():
 @login_required
 def delete_completed():
 
+    """Delete completed todo item"""
+
+    # Connect to database
+    db = SQL("sqlite:///todo3.db")
+
+    # User reached route via POST (as by submitting a form via POST)
     if request.method == "POST":
 
         # Delete the task entry entirely from the completed database
@@ -229,10 +274,15 @@ def delete_completed():
 @login_required
 def completed():
 
-        # Select all completed user specific tasks and sort them in the table by most recently completed
-        completed_tasks = db.execute("SELECT * FROM completed WHERE id=:id ORDER BY date_complete ASC", id=session["user_id"])
+    """Display completed todo items"""
 
-        return render_template("completed.html", completes=completed_tasks)
+    # Connect to database
+    db = SQL("sqlite:///todo3.db")
+
+    # Select all completed user specific tasks and sort them in the table by most recently completed
+    completed_tasks = db.execute("SELECT * FROM completed WHERE id=:id ORDER BY date_complete ASC", id=session["user_id"])
+
+    return render_template("completed.html", completes=completed_tasks)
 
 
 if __name__ == '__main__':
