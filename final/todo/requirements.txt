@@ -18,7 +18,7 @@ click==7.1.2
 colorama==0.4.3
 configparser==4.0.2
 contextlib2==0.6.0.post1
-cryptography==2.9
+cryptography==3.2
 cs50==5.0.4
 docker==4.2.0
 docker-compose==1.25.5
