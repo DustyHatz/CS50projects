@@ -38,7 +38,7 @@ Jinja2==2.11.2
 jmespath==0.9.5
 jsonschema==3.2.0
 MarkupSafe==1.1.1
-paramiko==2.7.1
+paramiko==2.10.1
 passlib==1.7.2
 pathlib2==2.3.5
 pathspec==0.5.9
